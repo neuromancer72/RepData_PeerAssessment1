@@ -19,3 +19,8 @@ knit("PA1_template.Rmd")
 knit2html("PA1_template.md")
 
 
+IntvAvg<-tapply(dt$steps,as.factor(dt$interval),mean,na.rm=TRUE)
+
+plot(as.numeric(unique(dt$interval)),IntvAvg,type='l',main='Average number of steps taken per 5- minute interval',xlab='5- minute interval',ylab='Number of steps',col='red')
+axis(3,at=c(0,600,1200,1800,2300),lab=c('0:00','6:00','12:00','18:00','23:00'),pos=210,padj=1)
+

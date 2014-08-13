@@ -4,9 +4,6 @@
 ## Loading and preprocessing the data
 
 
-```r
-dt<-read.csv(unz('activity.zip','activity.csv'))
-```
 Add a new variable in the dataset: 
 * newID: an identifier for the 5-minute interval within the day (a progressive integer  from 1 to 288).
 

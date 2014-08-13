@@ -3,13 +3,13 @@
 
 ## Loading and preprocessing the data
 
-```{r}
+```{r,echo=TRUE}
 dt<-read.csv(unz('activity.zip','activity.csv'))
 ```
 Add a new variable in the dataset: 
 * newID: an identifier for the 5-minute interval within the day (a progressive integer  from 1 to 288).
 
-```{r}
+```{r,echo=TRUE}
 newID<-vector(mode="numeric",length=dim(dt)[1])
 
 for(i in 1:dim(dt)[1]){
@@ -19,22 +19,38 @@ dt$newID<-newID
 ```
 
 ## What is mean total number of steps taken per day?
-```{r}
+```{r,echo=TRUE}
 TotSteps<-tapply(dt$steps,as.factor(dt$date),sum,na.rm=TRUE)
 hist(as.vector(TotSteps),breaks=10,main='Total number of steps taken per day',xlab='Number of steps',ylab='',col='blue')
 ```
 
 Mean and Median of total number of steps taken per day
-```{r}
+```{r,echo=TRUE}
 s<-summary(TotSteps)
-s["Median"]
-s["Mean"]
+print(paste("Median =",s["Median"]))
+print(paste("Mean =",s["Mean"]))
 ```
 
 
 ## What is the average daily activity pattern?
+```{r}
+IntvAvg<-tapply(dt$steps,as.factor(dt$interval),mean,na.rm=TRUE)
+```
 
+Time series plot of the 5-minute interval and the average number of steps taken, averaged across all days
 
+```{r}
+plot(as.numeric(unique(dt$interval)),IntvAvg,type='l',main='Average number of steps taken per 5- minute interval',xlab='5- minute interval',ylab='Number of steps',col='red')
+```
+
+5- minute interval with the maximum number of  steps on average
+```{r}
+print(paste("5-minute interval id: ",names(which.max(IntvAvg))));
+```
+
+```{r}
+print(paste("maximum number of  steps on average: ",IntvAvg[which.max(IntvAvg)]))
+```
 
 ## Imputing missing values
 
