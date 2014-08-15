@@ -8,17 +8,21 @@
 dt<-read.csv(unz('activity.zip','activity.csv'))
 ```
 Add a new variable in the dataset: 
-* newID: an identifier for the 5-minute interval within the day (a progressive integer  from 1 to 288).
+
+
+Add a new factor variable with two levels – “weekday” and “weekend” indicating whether a given date is weekend (Saturday or Sunday) or a weekday 
+day
 
 
 ```r
-newID<-vector(mode="numeric",length=dim(dt)[1])
-
+temp<-vector(mode="character",length=dim(dt2)[1])
 for(i in 1:dim(dt)[1]){
-	newID[i]=ifelse(i%%288==0, 288, i%%288);
+	a<-strptime(dt$date[i],"%Y-%m-%d")
+	temp[i]=ifelse((a$wday==0) | (a$wday==6),"weekend","weekday");
 }
-dt$newID<-newID
+dt$wd=as.factor(temp)
 ```
+
 
 ## What is mean total number of steps taken per day?
 
@@ -29,7 +33,7 @@ hist(as.vector(TotSteps),breaks=10,main='Total number of steps taken per day',xl
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
-* Mean and Median of total number of steps taken per day
+Mean and Median of total number of steps taken per day
 
 ```r
 s<-summary(TotSteps)
@@ -55,7 +59,7 @@ print(paste("Mean =",s["Mean"]))
 IntvAvg<-tapply(dt$steps,as.factor(dt$interval),mean,na.rm=TRUE)
 ```
 
-* Time series plot of the 5-minute interval and the average number of steps taken, averaged across all days
+Time series plot of the 5-minute interval and the average number of steps taken, averaged across all days
 
 
 ```r
@@ -64,7 +68,7 @@ plot(as.numeric(unique(dt$interval)),IntvAvg,type='l',main='Average number of st
 
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
 
-* 5- minute interval with the maximum number of  steps on average
+5- minute interval with the maximum number of  steps on average
 
 ```r
 print(paste("5-minute interval id: ",names(which.max(IntvAvg))));
@@ -85,7 +89,7 @@ print(paste("maximum number of  steps on average: ",IntvAvg[which.max(IntvAvg)])
 
 ## Imputing missing values
 
-* Total number of missing values in the dataset
+Total number of missing values in the dataset
 
 
 ```r
@@ -109,6 +113,69 @@ for(i in 1:nrow(dt)){
 dt2$steps<-newsteps;
 ```
 
+Total number of steps taken each day according the new dataset
 
+
+```r
+TotSteps2<-tapply(dt2$steps,as.factor(dt2$date),sum,na.rm=TRUE)
+hist(as.vector(TotSteps2),breaks=10,main='',xlab='Number of steps',ylab='',col='blue')
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
+
+Mean and median of the new dataset
+
+
+```r
+s2<-summary(TotSteps2)
+print(paste("Median =",s2["Median"]))
+```
+
+```
+## [1] "Median = 10800"
+```
+
+```r
+print(paste("Mean =",s2["Mean"]))
+```
+
+```
+## [1] "Mean = 10800"
+```
+
+Differences between the new dataset and the original one
+
+```r
+print(paste("Differences between the two Median =",s2["Median"] - s["Median"]))
+```
+
+```
+## [1] "Differences between the two Median = 400"
+```
+
+```r
+print(paste("Differences between the two Mean =",s2["Mean"]- s["Mean"]))
+```
+
+```
+## [1] "Differences between the two Mean = 1450"
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+Differences in activity patterns between weekdays and weekends
+
+```r
+dt2_we=dt2[dt2$wd=="weekend",]
+dt2_wd=dt2[dt2$wd=="weekday",]
+
+IntvAvg_we<-tapply(dt2_we$steps,as.factor(dt2_we$interval),mean)
+IntvAvg_wd<-tapply(dt2_wd$steps,as.factor(dt2_wd$interval),mean)
+
+
+par(mfrow=c(2,1))
+plot(as.numeric(names(IntvAvg_we)),IntvAvg_we,type='l',main='weekend',xlab='5- minute interval',ylab='Number of steps',col='blue')
+plot(as.numeric(names(IntvAvg_wd)),IntvAvg_wd,type='l',main='weekday',xlab='5- minute interval',ylab='Number of steps',col='blue')
+```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 

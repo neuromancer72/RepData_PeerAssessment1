@@ -31,3 +31,6 @@ newsteps<-vector(nrow(dt),mode="numeric")
 for(i in 1:nrow(dt)){
 	newsteps[i]=ifelse(is.na(dt$steps[i])==T,IntvAvg[as.character(dt$interval[i])],dt$steps[i]);
 }
+
+TotSteps2<-tapply(dt2$steps,as.factor(dt2$date),sum,na.rm=TRUE)
+hist(as.vector(TotSteps2),breaks=10,main='',xlab='Number of steps',ylab='',col='blue')
