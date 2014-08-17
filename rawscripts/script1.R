@@ -49,4 +49,10 @@ dfwd<-data.frame(steps=IntvAvg_wd,interval=as.numeric(names(IntvAvg_wd)),day=rep
 dfweekd<-rbind(dfwe,dfwd);
 xyplot(steps~interval | day ,data=dfweekd,layout=c(1,2));
 
+par(mfrow=c(2,1))
+plot(as.numeric(names(IntvAvg_we)),IntvAvg_we,type='l',main='weekend',xlab='',ylab='',col='blue')
+plot(as.numeric(names(IntvAvg_wd)),IntvAvg_wd,type='l',main='weekday',xlab='',ylab='',col='blue')
+
+mtext('5- minute interval',side=1,outer=T);
+mtext('Number of steps',side=3,outer=T);
 

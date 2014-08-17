@@ -84,7 +84,7 @@ print(paste("Number of missing value: ",nrow(dt[is.na(dt$steps)==T | is.na(dt$da
 ## [1] "Number of missing value:  2304"
 ```
 
-As a strategy for imputing missing data we create a new dataset (called dt2) equal to the original dataset but with the missing data for a particular 5-minute interval replaced with the mean for that 5-minute interval
+As a strategy for imputing missing data I create a new dataset (called dt2) equal to the original dataset but with the missing data for a particular 5-minute interval replaced with the mean for that 5-minute interval
 
 
 ```r
