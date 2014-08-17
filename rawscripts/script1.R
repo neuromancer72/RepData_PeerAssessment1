@@ -1,4 +1,4 @@
-setwd('C:\\Users\\roberto\\RepData_PeerAssessment1')
+#setwd('C:\\Users\\roberto\\RepData_PeerAssessment1')
 #setwd('C:\\Users\\Roberto\\RepData_PeerAssessment1')
 
 dt<-read.csv(unzip(zipfile="activity.zip"))
@@ -34,3 +34,19 @@ for(i in 1:nrow(dt)){
 
 TotSteps2<-tapply(dt2$steps,as.factor(dt2$date),sum,na.rm=TRUE)
 hist(as.vector(TotSteps2),breaks=10,main='',xlab='Number of steps',ylab='',col='blue')
+
+library(lattice)
+
+dt2_we=dt2[dt2$wd=="weekend",]
+dt2_wd=dt2[dt2$wd=="weekday",]
+
+IntvAvg_we<-tapply(dt2_we$steps,as.factor(dt2_we$interval),mean)
+IntvAvg_wd<-tapply(dt2_wd$steps,as.factor(dt2_wd$interval),mean)
+
+dfwe<-data.frame(steps=IntvAvg_we,interval=as.numeric(names(IntvAvg_we)),day=rep("weekend",times=length(IntvAvg_we)));
+dfwd<-data.frame(steps=IntvAvg_wd,interval=as.numeric(names(IntvAvg_wd)),day=rep("weekday",times=length(IntvAvg_wd)));
+
+dfweekd<-rbind(dfwe,dfwd);
+xyplot(steps~interval | day ,data=dfweekd,layout=c(1,2));
+
+

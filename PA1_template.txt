@@ -7,22 +7,6 @@
 ```r
 dt<-read.csv(unz('activity.zip','activity.csv'))
 ```
-Add a new variable in the dataset: 
-
-
-Add a new factor variable with two levels – “weekday” and “weekend” indicating whether a given date is weekend (Saturday or Sunday) or a weekday 
-day
-
-
-```r
-temp<-vector(mode="character",length=dim(dt2)[1])
-for(i in 1:dim(dt)[1]){
-	a<-strptime(dt$date[i],"%Y-%m-%d")
-	temp[i]=ifelse((a$wday==0) | (a$wday==6),"weekend","weekday");
-}
-dt$wd=as.factor(temp)
-```
-
 
 ## What is mean total number of steps taken per day?
 
@@ -31,7 +15,7 @@ TotSteps<-tapply(dt$steps,as.factor(dt$date),sum,na.rm=TRUE)
 hist(as.vector(TotSteps),breaks=10,main='Total number of steps taken per day',xlab='Number of steps',ylab='',col='blue')
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
 Mean and Median of total number of steps taken per day
 
@@ -66,7 +50,7 @@ Time series plot of the 5-minute interval and the average number of steps taken,
 plot(as.numeric(unique(dt$interval)),IntvAvg,type='l',main='Average number of steps taken per 5- minute interval',xlab='5- minute interval',ylab='Number of steps',col='red')
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
 5- minute interval with the maximum number of  steps on average
 
@@ -100,7 +84,8 @@ print(paste("Number of missing value: ",nrow(dt[is.na(dt$steps)==T | is.na(dt$da
 ## [1] "Number of missing value:  2304"
 ```
 
-dt2 is a new dataset equal to the original dataset but with the missing data replaced with the mean for that 5-minute interval
+As a strategy for imputing missing data we create a new dataset (called dt2) equal to the original dataset but with the missing data for a particular 5-minute interval replaced with the mean for that 5-minute interval
+
 
 ```r
 dt2<-dt;
@@ -121,7 +106,7 @@ TotSteps2<-tapply(dt2$steps,as.factor(dt2$date),sum,na.rm=TRUE)
 hist(as.vector(TotSteps2),breaks=10,main='',xlab='Number of steps',ylab='',col='blue')
 ```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10.png) 
 
 Mean and median of the new dataset
 
@@ -162,6 +147,21 @@ print(paste("Differences between the two Mean =",s2["Mean"]- s["Mean"]))
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+Add a new factor variable in the dataset: 
+
+The new factor variable has two levels – “weekday” and “weekend” indicating whether a given date is weekend (Saturday or Sunday) or a weekday 
+day
+
+
+```r
+temp<-vector(mode="character",length=dim(dt2)[1])
+for(i in 1:dim(dt2)[1]){
+	a<-strptime(dt2$date[i],"%Y-%m-%d")
+	temp[i]=ifelse((a$wday==0) | (a$wday==6),"weekend","weekday");
+}
+dt2$wd=as.factor(temp)
+```
 
 Differences in activity patterns between weekdays and weekends
 
